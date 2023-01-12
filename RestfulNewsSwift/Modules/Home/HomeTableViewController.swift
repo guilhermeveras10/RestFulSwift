@@ -18,6 +18,15 @@ class HomeTableViewController: UITableViewController {
         didSet {tableView.reloadData()}
     }
     private var interactor: HomeInteractorProtocol!
+    lazy var activityIndicator: UIActivityIndicatorView = {
+      let activityIndicator = UIActivityIndicatorView()
+      activityIndicator.style = .large
+      activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+      activityIndicator.hidesWhenStopped = true
+      activityIndicator.color = .black
+      activityIndicator.startAnimating()
+      return activityIndicator
+  }()
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,6 +43,15 @@ class HomeTableViewController: UITableViewController {
     //MARK: - Helpers
     func configureInterface() {
         view.backgroundColor = .white
+        
+        tableView.addSubview(activityIndicator)
+            
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: tableView.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: tableView.centerYAnchor)
+        ])
+            
+        tableView.layoutSubviews()
         
         tableView.register(HomeTableViewCell.self, forCellReuseIdentifier: Strings.cellIdentifier)
         tableView.rowHeight = 60
@@ -53,6 +71,7 @@ extension HomeTableViewController: HomeTableViewControllerProtocol {
     func getHomeSuccess(response: HomeModel?) {
         self.articles = response?.articles ?? [ArticlesModel()]
         self.tableView.refreshControl?.endRefreshing()
+        self.activityIndicator.stopAnimating()
     }
     func getHomeError(error: ErrorHttps) {
         self.showError(error.message)
