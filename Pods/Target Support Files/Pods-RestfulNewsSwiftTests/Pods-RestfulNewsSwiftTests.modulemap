@@ -1,0 +1,6 @@
+framework module Pods_RestfulNewsSwiftTests {
+  umbrella header "Pods-RestfulNewsSwiftTests-umbrella.h"
+
+  export *
+  module * { export * }
+}
